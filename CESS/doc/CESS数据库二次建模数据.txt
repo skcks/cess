@@ -1,0 +1,152 @@
+instructor              #辅导员
+    id                  #主键
+    loginName           #登陆名
+	trueName            #真实姓名
+	password            #密码
+	mobileNO            #手机号码
+	email               #邮箱地址
+
+checker                 #加分证明审核者
+    id                  #主键
+    loginName           #真实姓名
+	trueName            #登陆名
+	password            #密码
+	level               #权限级别
+	
+manager                 #系统管理员
+    id                  #主键
+    loginName           #登陆名
+	password            #密码
+	createTime          #创建时间
+	lastLoginTime       #最后登录时间
+	lastLoginIp         #最后登录ip
+    level	            #权限级别
+
+	
+student                 #学生
+	id                  #主键
+	stuid               #学号
+	name                #姓名
+    password            #密码
+	mobileNO            #手机号码
+	email               #邮箱地址
+    class_id            #外键引用班级ID
+    intact              #资料完整程度
+	level               #权限级别
+
+evalGroupMember         #评测小组
+    id                  #主键
+    classId             #外键引用班级ID
+    studentId           #外键引用学生ID
+    isLeader            #是否为组长
+	createTime          #加入小组时间
+    permLevel	        #权限等级
+class
+    id                  #主键
+	num                 #班级数
+    speciality          #专业
+	faculty             #院系
+	instructorId        #外键引用辅导员id
+	years               #学习年数
+	
+course                  #课程
+    name                #课程名称
+	credit              #学分
+	speciality          #专业
+	kind                #课程种类
+	
+score                   #成绩
+    mark                #分数
+    studentId           #外键引用学生id
+	courseId            #外键引用课程id
+	term                #所属学期
+	years               #所属学年
+	
+extrascore              #额外分数
+    id                  #主键
+	description         #描述
+	source              #添加来源
+	mark                #分数
+	kind                #种类
+	isVerify            #是否审核
+
+extrascore_member        #加分成员
+    extraScoreId         #外键引用额外分数id
+	studentId            #外键引用学生id
+	
+D1_Evaluation  
+    id                   #主键
+	politicalBeliefs     #政治信仰
+	politicalStudy       #政治学习
+	health               #身心健康
+	socialPractice       #社会实践
+	socialWork           #社会工作
+	abideLaw             #遵纪守法
+	studyAttitude        #学习态度
+	polite               #文明礼貌
+    keepMorality	     #维护社会公德
+	lifestyleHealthHabit #生活作风卫生习惯
+	thrift               #节约
+    source               #评价来源：stu-学生自评，evgroup-测评小组，inst-辅导员
+	sourceId             #来源Id
+	student_id           #外键引用学生id
+	schoolYear           #学年
+	
+T2_Evaluation
+    id                   #主键
+	student_id           #外键引用学生id
+	entmMark             #文娱活动积分
+	phyexeMark           #体育锻炼积分
+	source               #评价来源：stu-学生自评，evgroup-测评小组，inst-辅导员
+	sourceId             #来源Id
+	student_id           #外键引用学生id
+	schoolYear           #学年
+	
+summarydata             #最终评价数据
+    id                  #主键
+    studentId           #外键引用学生id
+	schoolYear          #学年
+	D1                  #学年品德操行基本评定积分[3评]
+    D2                  #学年品德操行加分（最高35分）
+    D3                  #学年品德操行扣分
+    Z1                  #公共必修课（体育课除外）、基础必修课及专业必修课、专业限选课成绩折算积分
+    Z2                  #专业自选课、公共选修课（只计综合素质学分、没有实际单科百分制成绩的公共选修除外）成绩折算积分
+    Z3                  #智育成绩加分
+	T1                  #体育成绩积分
+	T2                  #体育锻炼、文娱活动基本积分[3评]
+	T3                  #文娱、体育活动加分（最高15分）
+	
+message                 #系统内部消息
+    id                  #主键
+	title               #主题
+	content             #内容
+	createTime          #创建时间
+	isNew               #是否为新消息
+	originID            #来源用户ID
+	originType          #来源用户种类
+	targetID            #目标用户ID
+	targetType          #目标用户种类
+    replyID             #外键引用自身ID(message_id)
+————————————————————————————————————————————————————————————————————
+实体关系分析：
+
+从属关系分析：
+1.一对一从属：
+	一个学生属于一个班级
+	一个成绩对应一个学生
+	一个班级对应一个辅导员
+	一个成绩对应一个课程
+	
+2.一对多从属：
+	一个辅导员带领多个班
+	一个班有多个学生
+	一个学生有多个成绩
+	一个学生有多个评测结果
+	一个学生有多个加减分记录
+	一个加减分记录对应多个学生
+	一条消息发给至少一个人
+	一个人可发送多条消息
+	一条消息有多个回复
+	
+----------------------------------------------------------------------	
+数据库模型关系：

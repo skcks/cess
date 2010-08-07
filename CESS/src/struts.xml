@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<constant name="struts.configuration.xml.reload" value="true"/>
+	<constant name="struts.i18n.encoding" value="GBK" />
+	<constant name="struts.action.extension" value="es," />
+	<package name="User" extends="struts-default">
+	    <default-action-ref name="user" />
+		<action name="user" class="u">
+			<result>/user/infocenter.jsp</result>
+		</action>
+	</package>
+	<package name="TestConfig" extends="struts-default" namespace="/testconfig">
+		<default-action-ref name="list" />
+		<action name="list" class="testConfig">
+			<result name="listtest">/test/list.jsp</result>
+		</action>
+	</package>
+</struts>
+	
