@@ -24,7 +24,8 @@ public class D1Evaluation {
 	private int sourceId; // 来源Id
 	// private int studentId; // 外键引用学生id
 	private String schoolYear; // 学年
-    
+    private boolean isSubmit;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
@@ -149,5 +150,13 @@ public class D1Evaluation {
 
 	public void setSchoolYear(String schoolYear) {
 		this.schoolYear = schoolYear;
+	}
+
+	public boolean isSubmit() {
+		return isSubmit;
+	}
+
+	public void setSubmit(boolean isSubmit) {
+		this.isSubmit = isSubmit;
 	}
 }

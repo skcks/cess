@@ -24,7 +24,7 @@ public class TestLoadData {
 	private HibernateTemplate hibernateTemplate;
     
 	@Test
-	@Rollback(false)
+	@Rollback(true)
 	public void testLoadStudentInfo() {
 
 		
@@ -33,7 +33,7 @@ public class TestLoadData {
 		System.out.println("专业：" + student.getClassInfo().getSpeciality());
 		double myIntact=student.getIntact();
 		int myId=student.getId();
-		student.setIntact((float) 2.5);
+		student.setIntact((float) 3.5);
 		hibernateTemplate.update(student);
 		System.out.println("myIntact:"+myIntact+";now is "+((Student) hibernateTemplate.load(Student.class, myId)).getIntact());
 		System.out.println("-----------------------同班同学----------------------");
@@ -60,10 +60,10 @@ public class TestLoadData {
 		this.hibernateTemplate = new HibernateTemplate(sf);
 	}
 	@Test
-	@Rollback(false)
+	@Rollback(true)
 	public void testSaveStudent() {
 		Student student=hibernateTemplate.get(Student.class,2);
-		student.setIntact((float) 0.5);
+		student.setIntact((float) 0.15);
 		hibernateTemplate.update(student);
 	}
 }
