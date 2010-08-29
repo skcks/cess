@@ -52,7 +52,7 @@ public class T2EvDaoMysql implements T2EvDao {
 
 	@SuppressWarnings("unchecked")
 	public List<T2Evaluation> getT2ByStuID(int studentID) {
-		String queryString = "from T2Evaluation t2 where t2.studentID=?";
+		String queryString = "from T2Evaluation t2 where t2.sourceId=?";
 		return hibernateTemplate.find(queryString, studentID);
 	}
 
@@ -61,11 +61,12 @@ public class T2EvDaoMysql implements T2EvDao {
 		return t2Data;
 	}
 
-	public T2Evaluation getT2ByStuID(int studentID, String shcoolYear) {
+	public T2Evaluation getT2(String sourceType, int sourceId, String schoolYear) {
 		Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
-		return (T2Evaluation) session.createQuery("from T2Evaluation t2 where t2.id=? and t2.schoolYear=?")
-									 .setInteger(1, studentID)
-									 .setString(2, shcoolYear)
+		return (T2Evaluation) session.createQuery("from T2Evaluation t2 where t2.source = ? and t2.sourceId=? and t2.schoolYear=?")
+									 .setString(1, sourceType)
+									 .setInteger(2, sourceId)
+									 .setString(3, schoolYear)
 									 .uniqueResult();
 
 	}
@@ -86,4 +87,40 @@ public class T2EvDaoMysql implements T2EvDao {
 		this.hibernateTemplate = hibernateTemplate;
 	}
 
+	public boolean isExist(T2Evaluation t2) {
+		List<?> result=hibernateTemplate.find("from T2Evaluation t2 where t2.sourceID=? and t2.schoolYear=? and t2.source=?",
+								t2.getSourceId(),
+								t2.getSchoolYear(),
+								t2.getSource());
+		return result.size()>0?false:true;
+	}
+
+	public boolean confirm(int t2id) {
+		T2Evaluation t2=hibernateTemplate.get(T2Evaluation.class, t2id);
+		if(null==t2 || (!t2.getSource().equalsIgnoreCase("stu"))){
+			return false;
+		}
+		t2.setSubmit(true);
+		hibernateTemplate.save(t2);
+		return true;
+	}
+
+	public int cancelSubmit(int t2id) {
+		T2Evaluation t2=hibernateTemplate.get(T2Evaluation.class, t2id);
+		
+		if (null==t2 ) {
+			return -1;
+		}
+		
+		if (!t2.getSource().equalsIgnoreCase("stu")) {
+			return 0;
+		}
+		
+		t2.setSubmit(false);
+		hibernateTemplate.save(t2);
+		
+		return t2.getId();
+	}
+
+	
 }

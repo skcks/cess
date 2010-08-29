@@ -2,18 +2,15 @@ package cn.es.evaluation.service;
 
 import javax.annotation.Resource;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import cn.es.evaluation.dao.D1EvDao;
 import cn.es.evaluation.dao.impl.D1EvDaoMysql;
 import cn.es.evaluation.model.D1Evaluation;
 
-@Component
+@Service
 public class D1EvaluationManager {
 	private D1EvDao d1EvDao = null;
-
-	public D1EvaluationManager() {
-	}
 
 	public boolean doSelfEvaluation(D1Evaluation d1) {
 		return this.doEvaluation(d1, "stu");
