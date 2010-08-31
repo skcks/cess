@@ -25,39 +25,25 @@ public class D1EvaluationManager {
 	}
 
 	public boolean submitData(int d1ID) {
-		D1Evaluation d1 = d1EvDao.getD1ByID(d1ID);
-		d1.setSubmit(true);
-		return d1EvDao.update(d1).isSubmit() ? true : false;
+		d1EvDao.confirm(d1ID);
+		return true;
+
 	}
 
 	public boolean cancelSubmit(int d1ID) {
-		D1Evaluation d1 = d1EvDao.getD1ByID(d1ID);
+		D1Evaluation d1 = d1EvDao.get(d1ID);
 		d1.setSubmit(false);
-		return d1EvDao.update(d1).isSubmit() ? true : false;
+		d1EvDao.update(d1);
+		return true;
+
 	}
 
 	private boolean doEvaluation(D1Evaluation d1, String sourceType) {
-		if (null == d1 || !d1.getSource().equalsIgnoreCase(sourceType)
-				|| d1EvDao.exist(d1.getSourceId(), d1.getSource()))
+		if (d1EvDao.isExist(d1.getId()) > 0) {
 			return false;
-		return d1EvDao.add(d1) > 0 ? true : false;
-	}
-
-	public boolean d1Validata(D1Evaluation d1) {
-		boolean retVal = true;
-		retVal = retVal && d1.getPoliticalBeliefs() > 0 && d1.getPoliticalBeliefs() <= 6;
-		retVal = retVal && d1.getPoliticalStudy() > 0 && d1.getPoliticalStudy() <= 7;
-		retVal = retVal && d1.getHealth() > 0 && d1.getHealth() <= 6;
-		retVal = retVal && d1.getSocialPractice() > 0 && d1.getSocialPractice() <= 5;
-		retVal = retVal && d1.getSocialWork() > 0 && d1.getSocialWork() <= 5;
-		retVal = retVal && d1.getPoliticalBeliefs() > 0 && d1.getPoliticalBeliefs() <= 7;
-		retVal = retVal && d1.getAbideLaw() > 0 && d1.getAbideLaw() <= 6;
-		retVal = retVal && d1.getStudyAttitude() > 0 && d1.getStudyAttitude() <= 7;
-		retVal = retVal && d1.getPolite() > 0 && d1.getPolite() <= 5;
-		retVal = retVal && d1.getKeepMorality() > 0 && d1.getKeepMorality() <= 6;
-		retVal = retVal && d1.getLifestyleHealthHabit() > 0 && d1.getLifestyleHealthHabit() <= 5;
-		retVal = retVal && d1.getThrift() > 0 && d1.getThrift() <= 5;
-		return retVal;
+		}
+		d1EvDao.save(d1);
+		return true;
 	}
 
 	public D1EvDao getD1EvDao() {

@@ -87,7 +87,7 @@ D1_Evaluation
     keepMorality	     #维护社会公德
 	lifestyleHealthHabit #生活作风卫生习惯
 	thrift               #节约
-    source               #评价来源：stu-学生自评，evgroup-测评小组，inst-辅导员
+    source               #评价来源：stu-学生自评，evgp-测评小组，inst-辅导员
 	sourceId             #来源Id
 	student_id           #外键引用学生id
 	schoolYear           #学年
@@ -97,7 +97,7 @@ T2_Evaluation
 	student_id           #外键引用学生id
 	entmMark             #文娱活动积分
 	phyexeMark           #体育锻炼积分
-	source               #评价来源：stu-学生自评，evgroup-测评小组，inst-辅导员
+	source               #评价来源：stu-学生自评，evgp-测评小组，inst-辅导员
 	sourceId             #来源Id
 	student_id           #外键引用学生id
 	schoolYear           #学年
@@ -110,7 +110,8 @@ summarydata             #最终评价数据
     D2                  #学年品德操行加分（最高35分）
     D3                  #学年品德操行扣分
     Z1                  #公共必修课（体育课除外）、基础必修课及专业必修课、专业限选课成绩折算积分
-    Z2                  #专业自选课、公共选修课（只计综合素质学分、没有实际单科百分制成绩的公共选修除外）成绩折算积分
+    Z2                  #专业自选课、公共选修课
+                        #(只计综合素质学分、没有实际单科百分制成绩的公共选修除外)成绩折算积分
     Z3                  #智育成绩加分
 	T1                  #体育成绩积分
 	T2                  #体育锻炼、文娱活动基本积分[3评]
@@ -119,6 +120,7 @@ summarydata             #最终评价数据
 message                 #系统内部消息
     id                  #主键
 	title               #主题
+    authorName          #签写人
 	content             #内容
 	createTime          #创建时间
 	isNew               #是否为新消息

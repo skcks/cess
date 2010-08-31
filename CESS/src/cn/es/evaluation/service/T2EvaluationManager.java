@@ -14,32 +14,32 @@ import cn.es.evaluation.model.T2Evaluation;
 public class T2EvaluationManager {
 	private T2EvDao t2Dao = null;
 
-	public T2EvaluationManager() {
-	}
+	public T2EvaluationManager() {}
 
 	public List<T2Evaluation> queryStudentT2Info(int stuId) {
 		return t2Dao.getT2ByStuID(stuId);
 	}
 
-	public int modify(T2Evaluation t2) {	
-		return t2Dao.update(t2).getId();
+	public void modify(T2Evaluation t2) {
+		 t2Dao.update(t2);	
 	}
 
-	public List<T2Evaluation> listSchoolYearT2(int studentId) {
-		return t2Dao.getT2ByStuID(studentId);
-	}
-
-	public T2Evaluation queryT2SpecialnSchoolYear(String sourceType, int sourceId, String schoolYear) {
-		return t2Dao.getT2(sourceType, sourceId, schoolYear);
-	}
-
-	public boolean confirm(T2Evaluation t2) {
 	
-		return t2Dao.confirm(t2.getId());
+	public T2Evaluation queryT2SpecialnSchoolYear(String sourceType, int sourceId, String schoolYear) {
+		return t2Dao.getSchoolYearT2(sourceType, sourceId, schoolYear);
+	}
+
+	public int confirm(T2Evaluation t2) {
+		t2.setSubmit(true);
+		t2Dao.save(t2);
+		return t2.getId();
 	}
 
 	public int cancelConfirm(int t2ID) {
-		return t2Dao.cancelSubmit(t2ID);
+		T2Evaluation t2= t2Dao.get(t2ID);
+		t2.setSubmit(false);
+		t2Dao.save(t2);
+		return t2ID;
 	}
 	
 	public int doSelfEval(T2Evaluation t2) {
@@ -58,10 +58,8 @@ public class T2EvaluationManager {
 	}
 
 	private int doEvaluation(T2Evaluation t2) {
-		if (t2Dao.isExist(t2)) {
-			return 0;
-		}
-		return t2Dao.add(t2);
+		t2Dao.save(t2);
+		return t2.getId();
 	}
 
 	public T2EvDao getT2Dao() {
