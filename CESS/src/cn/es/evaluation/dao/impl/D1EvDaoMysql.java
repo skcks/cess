@@ -2,6 +2,7 @@ package cn.es.evaluation.dao.impl;
 
 import java.io.Serializable;
 
+
 import org.springframework.stereotype.Component;
 
 import cn.es.dao.DaoSupport;
@@ -16,11 +17,14 @@ public class D1EvDaoMysql extends DaoSupport<D1Evaluation> implements D1EvDao {
 		super();
 	}
 
-	public int confirm(Serializable id) {
-		String updateQL = "update " + GenricsUtil.getEntityName(entityClazz) + " t set t.isSubmit=1 where t."
+	public int confirm(Serializable id,boolean state) {
+		String updateQL = "update " + GenricsUtil.getEntityName(entityClazz) + " o set o.submit=? where o."
 				+ GenricsUtil.getIdName(entityClazz)
 				+"=?";
 		System.out.println("updateQL = "+updateQL);
-		return sessionFactory.getCurrentSession().createQuery(updateQL).setParameter(1, id).executeUpdate();
+		
+		return   sessionFactory.getCurrentSession().createQuery(updateQL).setParameter(0, state).setParameter(1, id).executeUpdate();
+		//return hibernateTemplate.bulkUpdate(updateQL,state,id);
 	}
+	
 }

@@ -28,7 +28,7 @@ public class D1Evaluation {
 	private int sourceId;
 	private Student student; // 外键引用学生id
 	private String schoolYear; // 学年
-    private boolean isSubmit;
+    private boolean submit;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -156,13 +156,7 @@ public class D1Evaluation {
 		this.schoolYear = schoolYear;
 	}
 
-	public boolean isSubmit() {
-		return isSubmit;
-	}
-
-	public void setSubmit(boolean isSubmit) {
-		this.isSubmit = isSubmit;
-	}
+	
 
 	@ManyToOne(optional=true)
 	@JoinColumn(name="studentId")
@@ -172,5 +166,13 @@ public class D1Evaluation {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+
+	public boolean getSubmit() {
+		return submit;
+	}
+
+	public void setSubmit(boolean submit) {
+		this.submit = submit;
 	}
 }

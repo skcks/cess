@@ -11,9 +11,11 @@ import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.stereotype.Component;
 
 import cn.es.util.GenricsUtil;
 
+@Component
 public abstract class DaoSupport<T> implements BasicDao<T> {
 	protected HibernateTemplate hibernateTemplate = null;
 	protected SessionFactory sessionFactory = null;
@@ -26,15 +28,19 @@ public abstract class DaoSupport<T> implements BasicDao<T> {
 		if (null == ids || 0 == ids.length) {
 			return 0;
 		}
+		
 		sb.append(GenricsUtil.getEntityName(entityClazz));
 		sb.append(" t where t.");
-		sb.append(GenricsUtil.getIdName(entityClazz));
-
-		buildINParams(sb, ids);
+		sb.append(GenricsUtil.getIdName(entityClazz)).append(" in(");
+		for (int i = 0; i < ids.length; i++) {
+			sb.append("?,");
+		}
+		sb.setCharAt(sb.length()-1, ')');
+		//buildINParams(sb, ids);
 
 		System.out.println("query string is " + sb.toString());
 
-		return sessionFactory.getCurrentSession().createQuery(sb.toString()).executeUpdate();
+		return hibernateTemplate.bulkUpdate(sb.toString(),ids);
 	}
 
 	public T get(Serializable id) {
@@ -123,11 +129,13 @@ public abstract class DaoSupport<T> implements BasicDao<T> {
 		buildINParams(sb, ids);
 		System.out.println(sb);
 		long retval=(Long) hibernateTemplate.find(sb.toString()).get(0);
+		//System.out.println("retval="+retval);
 		return (int)retval;
+		
 	}
 
 	public Serializable save(T entity) {
-		return hibernateTemplate.save(entity);
+		return hibernateTemplate.getSessionFactory().getCurrentSession().save(entity);
 	}
 
 	public void update(T entity) {
@@ -148,7 +156,9 @@ public abstract class DaoSupport<T> implements BasicDao<T> {
 
 	@Resource
 	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+		
 		this.hibernateTemplate = hibernateTemplate;
+		this.sessionFactory=this.hibernateTemplate.getSessionFactory();
 	}
 
 	public HibernateTemplate getHibernateTemplate() {

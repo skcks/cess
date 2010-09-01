@@ -37,7 +37,7 @@
 		<property name="maxIdleTime" value="20" />
 	</bean>
 
-	<bean id="sf" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<!-- 将初始化好的数据源注入到hibernate的SessionFactory中去 -->
 		<property name="dataSource" ref="dataSource" />
 	<!--
@@ -61,30 +61,28 @@
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.current_session_context_class">thread</prop>
 			</props>
 		</property>
 	</bean>
-		
-	<tx:advice id="txAdvice" transaction-manager="txManager"> 
-		<tx:attributes>
-    		<tx:method name="get*" read-only="true" /> 
-			<tx:method name="*" read-only="false"/>
-		</tx:attributes> 
-	</tx:advice>
-
-	<aop:config proxy-target-class="true">    
-  		<aop:pointcut id="tranPointcut" expression="execution(public * cn.es..service.*.*(..))"/>
-  		<aop:advisor advice-ref="txAdvice" pointcut-ref="tranPointcut"/>
-	</aop:config> 
-
+	
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sf" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
-		<property name="sessionFactory" ref="sf" />
+		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
-	<!-- 在下面定义其他bean -->
+	<aop:config>    
+  		<aop:pointcut id="txPointcut" expression="execution(public * cn.es.*.service.*.*(..))"/>
+  		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
+	</aop:config> 
+	
+	<tx:advice id="txAdvice" transaction-manager="txManager"> 
+		<tx:attributes>
+    		<tx:method name="get*" read-only="true" /> 
+			<tx:method name="*" propagation="REQUIRED"/>
+		</tx:attributes> 
+	</tx:advice>
+	<!--在下面定义其他bean-->
 </beans>

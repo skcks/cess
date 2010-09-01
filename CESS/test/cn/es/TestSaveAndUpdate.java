@@ -1,5 +1,7 @@
 package cn.es;
 
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -17,14 +19,23 @@ import cn.es.user.model.Student;
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class TestSaveAndUpdate {
-	
+	private HibernateTemplate hibernateTemplate;
+
 	@Test
 	@Rollback(false)
 	public void testSaveStudent() {
-		HibernateTemplate hibernateTemplate = new ClassPathXmlApplicationContext("beans.xml").getBean(
-				"hibernateTemplate", HibernateTemplate.class);
+
 		Student student = hibernateTemplate.get(Student.class, 2);
 		student.setIntact((float) 0.4);
 		hibernateTemplate.update(student);
+	}
+
+	public HibernateTemplate getHibernateTemplate() {
+		return hibernateTemplate;
+	}
+
+	@Resource
+	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+		this.hibernateTemplate = hibernateTemplate;
 	}
 }

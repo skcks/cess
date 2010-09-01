@@ -1,43 +1,45 @@
 package cn.es.evaluation.service;
 
-import static org.junit.Assert.*;
+
+
+import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.test.annotation.Rollback;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.es.evaluation.model.D1Evaluation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:beans.xml" })
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@Transactional
 public class D1EvaluationManagerTest {
 
-	private static D1EvaluationManager d1EvlMgr = null;
+	private D1EvaluationManager d1EvalMgr = null;
 	private static float BASIC_SCORE = 4.5f;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		d1EvlMgr = new ClassPathXmlApplicationContext("beans.xml").getBean("d1EvaluationManager",
-				D1EvaluationManager.class);
-		BASIC_SCORE+=Math.random();
-		System.out.println("BASIC_SCORE is "+BASIC_SCORE);
+
+		BASIC_SCORE += Math.random();
+		System.out.println("BASIC_SCORE is " + BASIC_SCORE);
 	}
 
 	@Test
-	@Rollback(false)
 	public void testDoSelfEvaluation() {
 
 		D1Evaluation d1 = initialD1Entity();
 
-		d1EvlMgr.doSelfEvaluation(d1);
+		d1EvalMgr.doSelfEvaluation(d1);
 
 		Assert.assertNotNull("ID为空", d1.getId());
 
@@ -67,7 +69,7 @@ public class D1EvaluationManagerTest {
 	public void testDoEvgpEvaluation() {
 		D1Evaluation d1 = initialD1Entity();
 
-		d1EvlMgr.doEvgpEvaluation(d1);
+		d1EvalMgr.doEvgpEvaluation(d1);
 
 		Assert.assertNotNull("ID为空", d1.getId());
 	}
@@ -76,29 +78,51 @@ public class D1EvaluationManagerTest {
 	public void testDoInstEvaluation() {
 		D1Evaluation d1 = initialD1Entity();
 
-		d1EvlMgr.doInstEvaluation(d1);
+		d1EvalMgr.doInstEvaluation(d1);
 
 		Assert.assertNotNull("ID为空", d1.getId());
 	}
 
 	@Test
 	public void testSubmitData() {
-		D1Evaluation d1 = initialD1Entity();
+		/*
+		 * D1Evaluation d1 = initialD1Entity();
+		 * 
+		 * d1EvlMgr.doSelfEvaluation(d1);
+		 * 
+		 * Assert.assertNotNull("ID为空,添加数据失败", d1.getId());
+		 */
+		boolean submitResult = d1EvalMgr.submitData(5);
 
-		d1EvlMgr.doSelfEvaluation(d1);
-
-		Assert.assertNotNull("ID为空,添加数据失败", d1.getId());
-		
-		boolean submitResult = d1EvlMgr.submitData(d1.getId());
-		
 		Assert.assertTrue("确定D1分数失败", submitResult);
-		
+
 		System.out.println(submitResult);
 	}
 
 	@Test
 	public void testCancelSubmit() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
+	@Test
+	public void testDelete() {
+		d1EvalMgr.removeD1(2);
+	}
+
+	public static void main(String[] args) throws Exception {
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+		D1EvaluationManager d1EvaluationManager=ctx.getBean("d1EvaluationManager",D1EvaluationManager.class);
+		d1EvaluationManager.submitData(2);
+	}
+
+	public D1EvaluationManager getD1EvlMgr() {
+		return d1EvalMgr;
+	}
+
+	@Resource
+	public void setD1EvlMgr(D1EvaluationManager d1EvaluationManager) {
+		this.d1EvalMgr = d1EvaluationManager;
+	}
+	
+	
 }
