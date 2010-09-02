@@ -5,6 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+
+import cn.es.user.model.Student;
 
 @Entity
 public class T2Evaluation {
@@ -13,7 +18,7 @@ public class T2Evaluation {
 	private float phyexeMark; // 体育锻炼积分
 	private String source; // 评价来源：stu-学生自评，evgroup-测评小组，inst-辅导员
 	private int sourceId; // 来源Id
-	// private int studentId; // 外键引用学生id
+	private Student  student;// 外键引用学生id
 	private String schoolYear; // 学年
     private boolean isSubmit;   //学生是否确认
 	@Id
@@ -74,5 +79,15 @@ public class T2Evaluation {
 
 	public void setSubmit(boolean isSubmit) {
 		this.isSubmit = isSubmit;
+	}
+
+	@ManyToOne(optional=false)
+	@JoinColumn(name="studentID")
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 }

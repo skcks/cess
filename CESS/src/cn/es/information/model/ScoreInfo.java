@@ -16,6 +16,7 @@ public class ScoreInfo {
 	private int term; // 所属学期
 	private String years; // 所属学年
 	private CourseInfo course;
+	private String scoreType;
 
 	// private int courseId; // 外键引用课程id
 
@@ -62,6 +63,15 @@ public class ScoreInfo {
 
 	public void setCourse(CourseInfo course) {
 		this.course = course;
+	}
+
+	@Column(length = 2)
+	public String getScoreType() {
+		return scoreType;
+	}
+
+	public void setScoreType(String scoreType) {
+		this.scoreType = scoreType;
 	}
 
 }

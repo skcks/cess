@@ -23,7 +23,6 @@ public class T2EvDaoMysql extends DaoSupport<T2Evaluation> implements T2EvDao {
 		Session session = this.getSessionFactory().getCurrentSession();
 		Query query = session
 				.createQuery("from T2Evaluation t2 where t2.sourceType=? and t2.sourceId=? and t2.schoolYear=?");
-		
 		return (T2Evaluation) query.uniqueResult();
 	}
 }

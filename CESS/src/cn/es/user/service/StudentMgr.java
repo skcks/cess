@@ -2,28 +2,33 @@ package cn.es.user.service;
 
 import javax.annotation.Resource;
 
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Service;
 
-
+import cn.es.user.dao.UserDao;
 import cn.es.user.model.Student;
 
-@Service
+
 public class StudentMgr {
-	private SessionFactory sessionFactory=null;
-	
-	
-	public int addNewStudent(Student student){
-		sessionFactory.getCurrentSession().save(student);
-		return student.getId();
+	private UserDao userDao = null;
+
+	public Student checkUser(String username, String password) {
+		return null;
 	}
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
+
+	public Student updateUserInfo(Student student) {
+		return null;
 	}
 	
-	@Resource(name="hibernateTemplate")
-	public void setSessionFactory(HibernateTemplate hibernateTemplate) {
-		this.sessionFactory = hibernateTemplate.getSessionFactory();
+	public boolean changeUserPws(int userId,String newPsw) {
+		return false;
+	}
+	
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	@Resource
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 }
