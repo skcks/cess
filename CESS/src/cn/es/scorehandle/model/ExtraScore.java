@@ -23,6 +23,7 @@ public class ExtraScore {
 	private String description; // 描述
 	private String source; // 添加来源
 	private float mark; // 分数
+	/*D2,D3,Z3,T3*/
 	private String kind; // 种类
 	private int isVerify; // 是否审核
 	private String schoolYear;

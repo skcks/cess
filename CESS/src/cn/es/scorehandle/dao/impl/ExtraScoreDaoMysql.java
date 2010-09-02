@@ -17,21 +17,24 @@ import cn.es.user.model.Student;
 public class ExtraScoreDaoMysql extends DaoSupport<ExtraScore> implements ExtraScoreDao {
 
 	public List<ExtraScore> getExtraScoreBySchoolYear(int stuId, String shcoolYear) {
-		List<ExtraScore> retList = new ArrayList<ExtraScore>();
-
-		Set<ExtraScore> extraScores = this.getExtraScoreByStuId(stuId);
+		List<ExtraScore> extraScores = this.getExtraScoreByStuId(stuId);
 		if (null != extraScores)
 			for (ExtraScore e : extraScores) {
 				if (e.getSchoolYear().endsWith(shcoolYear))
-					retList.add(e);
+					extraScores.remove(e);
 			}
 
-		return retList;
+		return extraScores;
 	}
 
-	public Set<ExtraScore> getExtraScoreByStuId(int stuId) {
+	public List<ExtraScore> getExtraScoreByStuId(int stuId) {
+		List<ExtraScore> extraScoreList = new ArrayList<ExtraScore>();
 		Student student = hibernateTemplate.get(Student.class, stuId);
-		return null != student ? student.getExtraScores() : null;
+		if (null != student)
+			for (ExtraScore e : student.getExtraScores()) {
+				extraScoreList.add(e);
+			}
+		return extraScoreList;
 	}
 
 	public int deleteExtraScore(Serializable extraScoreId) {
@@ -46,8 +49,8 @@ public class ExtraScoreDaoMysql extends DaoSupport<ExtraScore> implements ExtraS
 			if (null != menberSet) {
 
 				for (Student s : menberSet) {
-					for (Integer id : stuId) {
-						if (id == s.getId()){
+					for (int id : stuId) {
+						if (id == s.getId()) {
 							menberSet.remove(s);
 						}
 					}
@@ -60,9 +63,14 @@ public class ExtraScoreDaoMysql extends DaoSupport<ExtraScore> implements ExtraS
 		return count;
 	}
 
-	public int saveExtraScore(List<ExtraScore> extraScore) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int saveExtraScores(List<ExtraScore> extraScores) {
+		return this.saveOrUpdate(extraScores);
+	}
+
+	public List<Student> getExtraScoreMember(Serializable extraScoreId) {
+		ArrayList<Student> member = new ArrayList<Student>();
+		member.addAll(hibernateTemplate.get(ExtraScore.class, extraScoreId).getStudents());
+		return member;
 	}
 
 }

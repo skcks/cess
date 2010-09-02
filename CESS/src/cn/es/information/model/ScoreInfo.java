@@ -16,6 +16,8 @@ public class ScoreInfo {
 	private int term; // 所属学期
 	private String years; // 所属学年
 	private CourseInfo course;
+	
+	/*分数种类Z1，Z2 ，T1*/
 	private String scoreType;
 
 	// private int courseId; // 外键引用课程id
